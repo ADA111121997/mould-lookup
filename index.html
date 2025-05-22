@@ -1,0 +1,105 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mould Weight Lookup</title>
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 400px;
+    }
+    #result {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Mould Weight Lookup</h2>
+    <select id="mouldSelect" style="width:100%">
+      <option></option>
+      <option value="VKC-D1-1656">1656</option>
+      <option value="VKC-D1-1677">1677</option>
+      <option value="VKC-D1-1614">1614</option>
+      <option value="VKC-D1-1838">1838</option>
+      <option value="VKC-D1-1913">1913</option>
+      <option value="VKC-D1-1913A">1913A</option>
+      <option value="VKC-D1-20003">20003</option>
+      <option value="VKC-D1-20041">20041</option>
+      <option value="VKC-D1-20049">20049</option>
+      <option value="WG-PU-M-21056">21056</option>
+      <option value="WG-PU-M-21058">21058</option>
+      <option value="VKC-ITALY-1106">1106</option>
+      <option value="VKC-D1-1892">1892</option>
+      <option value="VKC-D1-1922">1922</option>
+    </select>
+    <button onclick="lookup()" style="margin-top:10px; width:100%; padding:10px;">Get Weight</button>
+    <div id="result"></div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+  <script>
+    $(document).ready(function() {
+      $('#mouldSelect').select2({
+        placeholder: 'Search mould number...',
+        matcher: function(params, data) {
+          if (!params.term) return data;
+          if (data.text.toLowerCase().includes(params.term.toLowerCase())) {
+            return data;
+          }
+          return null;
+        }
+      });
+    });
+
+    const mouldData = {
+      "VKC-D1-1656": { without: 98, with: "" },
+      "VKC-D1-1677": { without: 100, with: "" },
+      "VKC-D1-1614": { without: 102, with: "" },
+      "VKC-D1-1838": { without: 116, with: 95 },
+      "VKC-D1-1913": { without: 95, with: "" },
+      "VKC-D1-1913A": { without: 75, with: "" },
+      "VKC-D1-20003": { without: 104, with: "" },
+      "VKC-D1-20041": { without: 104, with: "" },
+      "VKC-D1-20049": { without: 88, with: "" },
+      "WG-PU-M-21056": { without: 116, with: "88/4mm" },
+      "WG-PU-M-21058": { without: 102, with: 79 },
+      "VKC-ITALY-1106": { without: 115, with: "" },
+      "VKC-D1-1892": { without: 107, with: "" },
+      "VKC-D1-1922": { without: 119, with: "" },
+    };
+
+    function lookup() {
+      const mould = document.getElementById("mouldSelect").value;
+      const resultDiv = document.getElementById("result");
+
+      if (mould && mouldData[mould]) {
+        const data = mouldData[mould];
+        let output = `Sole weight without cushion: ${data.without}g`;
+        if (data.with) {
+          output += `<br>Sole weight with cushion: ${data.with}`;
+        }
+        resultDiv.innerHTML = output;
+      } else {
+        resultDiv.textContent = "Mould number not found.";
+      }
+    }
+  </script>
+</body>
+</html>
